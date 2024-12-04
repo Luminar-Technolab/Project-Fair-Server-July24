@@ -1,5 +1,6 @@
 
 const users = require('../models/userModel')
+const jwt = require('jsonwebtoken')
 
 // register
 exports.registerController = async (req,res)=>{
@@ -30,8 +31,11 @@ exports.loginController = async (req,res)=>{
     try{
        const exisitingUser = await users.findOne({email,password})
        if(exisitingUser){
+        //token generate
+            const token = jwt.sign({userId:exisitingUser._id},process.env.JWTPASSWORD)
             res.status(200).json({
-                user:exisitingUser
+                user:exisitingUser,
+                token
             })
        }else{
         res.status(404).json("Invalid E Mail / Password")
