@@ -51,8 +51,15 @@ exports.getUserProjectsController = async (req,res)=>{
 //get all projects - authorised user
 exports.getAllProjectsController = async (req,res)=>{
     console.log("Inside getAllProjectsController");
+    //to get query parameter from url use req.query
+    const searchKey = req.query.search
     try{
-        const allProjects = await projects.find()
+        //to get documents from model which matches search query in languages
+        const allProjects = await projects.find({
+            languages:{
+                $regex:searchKey,$options:"i"
+            }
+        })
         res.status(200).json(allProjects)
     }catch(err){
         res.status(401).json(err)
