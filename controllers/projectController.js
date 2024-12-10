@@ -65,3 +65,26 @@ exports.getAllProjectsController = async (req,res)=>{
         res.status(401).json(err)
     }
 }
+
+//edit project -  use findByIdAndUpdate in model
+exports.editProjectController = async (req,res)=>{
+    console.log("Inside editProjectController");
+    //get project id from request params
+    const {id} = req.params
+    // req.body - contains only text type data
+    const {title,languages,overview,github,website,projectImage} = req.body
+    // to get file data - req.file
+    const reUploadImageFileName = req.file?req.file.filename:projectImage
+    // to get userId - use jwtmiddleware
+    const userId = req.userId
+    console.log(id,title,languages,overview,github,website,reUploadImageFileName,userId);
+    try{
+        const updatedProject = await projects.findByIdAndUpdate({_id:id},{
+            title,languages,overview,github,website,projectImage:reUploadImageFileName,userId
+        },{new:true})
+        await updatedProject.save()
+        res.status(200).json(updatedProject)
+    }catch(err){
+        res.status(401).json(err)
+    }
+}
