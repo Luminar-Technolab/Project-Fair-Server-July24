@@ -88,3 +88,17 @@ exports.editProjectController = async (req,res)=>{
         res.status(401).json(err)
     }
 }
+
+//remove project
+exports.removeProjectController = async (req,res)=>{
+    console.log("Inside removeProjectController");
+    // 1. get id of the project to be deleted from req params
+    const {id} = req.params
+    // 2. delete project with given id from model
+    try{
+        const removeProject = await projects.findByIdAndDelete({_id:id})
+        res.status(200).json(removeProject)
+    }catch(err){
+        res.status(401).json(err)
+    }
+}
